@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Block Game</title>
+</head>
+<body>
+<div>
+    <canvas id="game" width="500" height="500"></canvas>
+</div>
+<script src="js/game.js"></script>
+<script>
+    window.onload = function() {
+        console.log("Loaded.");
+
+        var gameCanvas = document.getElementById("game");
+
+        var game = blockGame(gameCanvas, gameCanvas.getContext("2d"));
+        game.start();
+    };
+</script>
+</body>
+</html>
