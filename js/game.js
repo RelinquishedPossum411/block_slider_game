@@ -5,13 +5,14 @@
 (function(global) {
     function Game(canvas, context, config) {
         // Game details
-        var sides = 3, moves = 0; // 3x3... for now
+        var moves = 0; // 3x3... for now
         var tiles = [], blank,
             active = false;
 
         var cfg = {
-            winCallback: function() {
-                alert("you won!");
+            tiles: 3,
+            winCallback: function(moves, time) {
+                alert("You won in " + moves + " moves!");
             }
         };
 
@@ -31,11 +32,8 @@
                 // And ensure combinations are solvable.
                 tiles = shuffle(fillTiles());
 
-                while (!solvable(tiles)) {
+                while (!solvable(tiles))
                     shuffle(tiles);
-                }
-
-                console.log(tiles);
 
                 tiles.push({ order: 0, data: null });
                 blank = tiles.length - 1;
@@ -51,25 +49,22 @@
                         handleSwap(blank + 1);
                         break;
                     case 38:
-                        handleSwap(blank + sides);
+                        handleSwap(blank + cfg.tiles);
                         break;
                     case 39:
                         handleSwap(blank - 1);
                         break;
                     case 40:
-                        handleSwap(blank - sides);
+                        handleSwap(blank - cfg.tiles);
                         break;
                 }
 
                 moves++;
-                game();
-                //setTimeout(game(), 500);
 
-                // Check winner here
-                if (tilesInOrder(tiles)) {
+                if (game() && tilesInOrder(tiles)) {
                     active = false;
 
-                    setTimeout(cfg.winCallback(), 200);
+                    setTimeout(cfg.winCallback(moves), 200);
                 }
             }
         }
@@ -79,15 +74,15 @@
             var difference = blank - blockIndex;
 
             // Right swap
-            if (difference === -1 && (blockIndex) % sides === 0)
+            if (difference === -1 && (blockIndex) % cfg.tiles === 0)
                 return;
 
             // Left swap
-            if (difference === 1 && (blank) % sides === 0)
+            if (difference === 1 && (blank) % cfg.tiles === 0)
                 return;
 
             // Top/bottom swaps
-            if (blockIndex < 0 || blockIndex > tiles.length)
+            if (blockIndex < 0 || blockIndex >= tiles.length)
                 return;
 
             console.log("Swapping indices " + blank + " and " + blockIndex);
@@ -100,7 +95,7 @@
             context.fillRect(0, 0, canvas.width, canvas.height);
 
             // Render tiles
-            var blockWidth = canvas.width / sides, blockHeight = canvas.height / sides;
+            var blockWidth = canvas.width / cfg.tiles, blockHeight = canvas.height / cfg.tiles;
             var fillX = 0, fillY = 0;
 
             var c = 1;
@@ -109,7 +104,7 @@
                 context.fillStyle = "#ff9add";
 
                 // Skip blank block
-                if (i !== 0 && i % sides === 0) {
+                if (i !== 0 && i % cfg.tiles === 0) {
                     fillX = 0;
                     fillY += blockHeight;
                 }
@@ -119,13 +114,15 @@
                     continue;
                 }
 
-                context.fillRect(fillX + 10, fillY + 10, blockWidth - 20, blockHeight - 20);
+                context.fillRect(fillX + 5, fillY + 5, blockWidth - 10, blockHeight - 10);
 
                 context.fillStyle = "black";
-                context.font = "48px roboto";
-                context.fillText(tiles[i].order, fillX + 50, fillY + 80);
+                context.font = "36px roboto";
+                context.fillText(tiles[i].order, fillX + 30, fillY + 60);
                 fillX += blockWidth;
             }
+
+            return true;
         }
 
         // TODO: check winner.
@@ -144,7 +141,7 @@
         function fillTiles() {
             var tiles = [];
 
-            for (var i = 0; i < sides * sides - 1; i++) {
+            for (var i = 0; i < cfg.tiles * cfg.tiles - 1; i++) {
                 tiles.push({
                     order: i + 1,
                     data: "LOL"
