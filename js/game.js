@@ -12,7 +12,7 @@
         var cfg = {
             tiles: 3,
             winCallback: function(moves, time) {
-                alert("You won in " + moves + " moves!");
+                alert("You won in " + time + " [time unit] within " + moves + " moves!");
             }
         };
 
@@ -38,6 +38,9 @@
                 tiles.push({ order: 0, data: null });
                 blank = tiles.length - 1;
 
+                if (tiles)
+                    fillCanvas();
+
                 global.addEventListener("keydown", keyDown);
             }
         };
@@ -61,7 +64,7 @@
 
                 moves++;
 
-                if (game() && tilesInOrder(tiles)) {
+                if (fillCanvas() && tilesInOrder(tiles)) {
                     active = false;
 
                     setTimeout(cfg.winCallback(moves), 200);
@@ -90,15 +93,13 @@
             blank = blockIndex;
         }
 
-        function game() {
+        function fillCanvas() {
             context.fillStyle = "black";
             context.fillRect(0, 0, canvas.width, canvas.height);
 
             // Render tiles
             var blockWidth = canvas.width / cfg.tiles, blockHeight = canvas.height / cfg.tiles;
             var fillX = 0, fillY = 0;
-
-            var c = 1;
 
             for (var i = 0; i < tiles.length; i++) {
                 context.fillStyle = "#ff9add";
@@ -124,8 +125,7 @@
 
             return true;
         }
-
-        // TODO: check winner.
+        
         function tilesInOrder(tiles) {
             for (var i = 0; i < tiles.length - 1; i++) {
                 if (tiles[i].order === 0)

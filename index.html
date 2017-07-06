@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Block Game</title>
+<meta charset="UTF-8"/>
+<title>Block Game</title>
+<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<div>
-<div>
+<div id="page-wrapper">
+<div id="secondary-wrapper">
+<div class="header">
     <h1>Block Sliding Game</h1>
 </div>
-<div>
+<div id="game-directions"><strong><u>Directions</u></strong>: Use the arrow keys to slide the tiles to position them such
+that they are in ascending order from top to bottom and left to right, leaving the empty tile at the bottom-right corner
+in the end.</div>
+<div id="game-container">
     <canvas id="game" width="500" height="500"></canvas>
+</div>
 </div>
 </div>
 <script src="js/game.js"></script>
 <script>
     window.onload = function() {
-        console.log("Loaded.");
+        console.log("Page loaded; ready to load game.");
 
         var gameCanvas = document.getElementById("game");
-
-        var game = blockGame(gameCanvas, gameCanvas.getContext("2d"), { tiles: 7, winCallback: function() { alert("aww yeah!"); } });
-
-        game.start();
+        blockGame(gameCanvas, gameCanvas.getContext("2d"), { tiles: 7, winCallback: function() { alert("aww yeah!"); } }).start();
     };
 </script>
 </body>
